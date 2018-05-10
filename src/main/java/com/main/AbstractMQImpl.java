@@ -11,14 +11,23 @@ import javax.jms.*;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by seed on 2018/5/9.
  */
-public class AbstractMQImpl extends  Start implements Runnable {
+public class AbstractMQImpl extends  Start  {
 	
-	 private static final Logger log = LoggerFactory.getLogger(AbstractMQImpl.class);
-
+	private static final Logger log = LoggerFactory.getLogger(AbstractMQImpl.class);
+	//BOSS线程
+	static Executor listen= Executors.newSingleThreadExecutor();
+	static Executor response= Executors.newSingleThreadExecutor();
+	private static int process_num=Runtime.getRuntime().availableProcessors();
+	//worker线程
+	Executor worker=Executors.newFixedThreadPool(process_num);
+	
     // 创建SSL连接器工厂类
     ActiveMQSslConnectionFactory sslConnectionFactory ;
     // 连接ActiveMQ
@@ -43,6 +52,11 @@ public class AbstractMQImpl extends  Start implements Runnable {
         keyStorePassword=config.getProperty("keyStorePassword");
         url=config.getProperty("url");
         mac=config.getProperty("mac");
+        
+        //启动多个worker线程，阻塞在读取
+        for(int i=0;i<process_num;i++){
+        	worker.execute(new WorkerImpl());
+        }
 
         try {
             sslConnectionFactory= new ActiveMQSslConnectionFactory();
@@ -66,43 +80,62 @@ public class AbstractMQImpl extends  Start implements Runnable {
         }
     }
     
-    
-    private void listenMQ(){
-    	while(true){
-             TextMessage message;
-             try {
-                 message = (TextMessage) consumer.receive(1000);//阻塞1S
-                 if (message != null) {
-                	 log.info("get message:"+message.getText());
-                     taskQueue.add(message.getText());//将任务放入队列中
-                     worker.execute(new WorkerImpl());//启动一个worker线程
-                 }else{
-                	 break;
-                 }
-             } catch (JMSException e) {
-                 e.printStackTrace();
-             }
-    	}
+
+    public  void start() {
+    	listen.execute(new Listen());
+    	response.execute(new Response());
     }
     
-    private void addMQ(){
-    	String message=responseQueue.poll();
-		try {
-			if(!CommUtil.isEmpty(message)){
-				producer.send(session.createTextMessage(message));
-				 log.info("send message :"+message);
-			}
-		} catch (JMSException e) {
-			e.printStackTrace();
+    /**
+     * 轮询MQ
+     * @author Seed
+     * 2018年5月10日 下午3:48:55
+     */
+    class Listen implements Runnable{
+
+		@Override
+		public void run() {
+			Thread.currentThread().setName("Listen-Thread");
+			while(true){
+	             TextMessage message;
+	             try {
+	                 message = (TextMessage) consumer.receive(50);//阻塞0.05S
+	                 if (message != null) {
+	                	 String text=message.getText();
+	                	 log.info("get message:"+text);
+	                     taskQueue.put(text);//将任务放入队列中
+	                 }
+	             } catch (JMSException e) {
+	                 e.printStackTrace();
+	             } catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+	    	}
 		}
     }
-    
-
-    @Override
-    public void run() {
-    	while(true){
-    		listenMQ();
-        	addMQ();
-    	}
+    /**
+     * 添加回复消息到MQ
+     * @author Seed
+     * 2018年5月10日 下午3:48:44
+     */
+    class Response implements Runnable{
+    	
+		@Override
+		public void run() {
+			Thread.currentThread().setName("Response-Thread-1");
+			while(true){
+				try {
+					String message=responseQueue.take();
+					if(!CommUtil.isEmpty(message)){
+						producer.send(session.createTextMessage(message));
+						 log.info("send message :"+message);
+					}
+				} catch (JMSException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
     }
 }

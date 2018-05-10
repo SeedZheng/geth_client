@@ -16,7 +16,9 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by seed on 2018/5/8.
@@ -144,9 +146,10 @@ public class TestCont {
             producer.send(session.createTextMessage("sslMessage "+i));
         }*/
         //发送一条命令
-        String command="build_factory";
-        Object[] params=new Object[]{"com.contract.Coin","minter","123",new Object[]{null}};
-
+        //String command="build_factory";
+        //Object[] params=new Object[]{"com.contract.Coin","minter","123",new Object[]{null}};
+        String command="getVersion";
+        Object[] params=new Object[]{"tttt"};
         Params p=new Params();
         p.setCommand(command);
         p.setParams(params);
@@ -219,6 +222,19 @@ public class TestCont {
             }
         }
 
+    }
+    
+    @Test
+    public void testQueue() throws Exception{
+    	BlockingQueue<String> queue=new LinkedBlockingQueue<>();
+    	for(int i=0;i<5;i++){
+    		queue.add("1");
+    	}
+    	
+    	String ret="";
+    	while((ret=queue.take())!=null){
+    		System.out.println(ret);
+    	}
     }
     
     

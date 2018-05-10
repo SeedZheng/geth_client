@@ -1,6 +1,7 @@
 package com.inter;
 
 import com.service.InvokeService;
+import com.tools.CommUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,8 +136,10 @@ public class Generated  implements  BuildInterface{
             else
                 path=config.getProperty("fp_windows");
             File file=new File(path);
-            System.out.println(file.exists());
-            credentials= WalletUtils.loadCredentials(payPass,file);
+            if(CommUtil.isNull(credentials)){
+            	credentials= WalletUtils.loadCredentials(payPass,file);
+            	log.info("credentials loading success");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (CipherException e) {
@@ -149,16 +152,19 @@ public class Generated  implements  BuildInterface{
             getInstance();
         String rpcPort=config.getProperty("port");
         String addr="http://127.0.0.1:"+rpcPort;
-        if(web3==null)
+        if(web3==null){
             web3= Admin.build(new HttpService(addr));
-        log.info("connect geth success");
+            log.info("connect geth success");
+        }
     }
 
     public void getInstance(){
-        InputStream ins=Generated.class.getClassLoader().getResourceAsStream("config.properties");
         try {
-            config.load(ins);
-            log.info("loading properties success");
+        	if(CommUtil.isNull(config) || config.size()==0){
+        		InputStream ins=Generated.class.getClassLoader().getResourceAsStream("config.properties");
+                config.load(ins);
+                log.info("loading properties success");
+        	}
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.domain.Params;
 import com.domain.Returns;
+import com.tools.CommUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 具体逻辑实现类
@@ -23,18 +26,26 @@ import java.util.List;
 public class WorkerImpl extends Start implements Runnable{
 
     private static final Logger log = LoggerFactory.getLogger(WorkerImpl.class);
-
-    public WorkerImpl(){}
+    private static AtomicInteger tNmae=new AtomicInteger(0);
 
     @Override
     public void run() {
-    	invoke();
+    	Thread.currentThread().setName("Worker-Thread-"+tNmae.getAndIncrement());
+    	for(;;){
+    		try {
+	   			 String message = taskQueue.take();//拿到命令
+	   			 log.info(message);
+	   	    	if(!CommUtil.isEmpty(message))
+	   	    		invoke(message);
+	   		} catch (InterruptedException e) {
+	   			e.printStackTrace();
+	   		}
+    	}
     }
     
     
-    public void invoke(){
+    public void invoke(String message){
     	
-    	String message=taskQueue.poll();//拿到命令
     	log.info("receive message "+message);
         
         Params param= JSONObject.parseObject(message,Params.class);
@@ -68,7 +79,7 @@ public class WorkerImpl extends Start implements Runnable{
             String ret=(String)method.invoke(clazz.newInstance(),params);
             
             ret=JSONObject.toJSONString(Returns.initReturns(param, ret));
-            responseQueue.add(ret);
+            responseQueue.put(ret);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
@@ -80,6 +91,8 @@ public class WorkerImpl extends Start implements Runnable{
         } catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
     	
