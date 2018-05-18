@@ -3,6 +3,8 @@ package com.domain;
 import java.util.Date;
 import java.util.Map;
 
+import com.tools.CommUtil;
+
 /**
  * Created by seed on 2018/5/3.
  */
@@ -12,6 +14,7 @@ public class Returns extends  Header{
 	
     private ReturnCode retCode; //返回值
     private String content;	//返回内容
+    
     
     public ReturnCode getRetCode() {
 		return retCode;
@@ -28,15 +31,25 @@ public class Returns extends  Header{
 	public void setContent(String content) {
 		this.content = content;
 	}
+	
+	public Returns() {}
+	
 
-	public static Returns initReturns(Params param,String ret){
+	public Returns(String version, int type, String trans_id,  ReturnCode retCode, String content) {
+		super(version, type, trans_id, new Date());
+		this.retCode = retCode;
+		this.content = content;
+	}
+	
+
+	public static Returns initReturns(Params param,String ret,ReturnCode code){
     	Returns returns=new Returns();
     	returns.setCurr_time(new Date());
     	returns.setTrans_id(param.getTrans_id());
     	returns.setType(1);
     	returns.setVersion(param.getVersion());
-    	returns.setRetCode(ReturnCode.SUCCESS);
     	returns.setContent(ret);
+    	returns.setRetCode(null==code?ReturnCode.SUCCESS:code);
     	
     	return returns;
     }
@@ -59,7 +72,7 @@ public class Returns extends  Header{
 		
 		System.out.println(param.toString());
 		
-		Returns returns=initReturns(param, "rets");
+		Returns returns=initReturns(param, "rets",null);
 		System.out.println(returns.toString());
 		
 	}

@@ -8,7 +8,8 @@ public enum ReturnCode {
     CONNECT_FAIL(-1,"连接客户端失败"),
     SUCCESS(0,"成功"),
     WAITING(5,"等待确认"),
-    BALANCE_INSUFF(10,"余额不足");
+    BALANCE_INSUFF(10,"余额不足"),
+	ERROR(-2,"失败");
 
 
 	private  int code;

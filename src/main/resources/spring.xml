@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+http://www.springframework.org/schema/util 
+http://www.springframework.org/schema/util/spring-util.xsd 
+http://www.springframework.org/schema/tx 
+http://www.springframework.org/schema/tx/spring-tx.xsd
+http://www.springframework.org/schema/task 
+http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+
+
+    <!-- 定时任务 -->
+    <!-- <import resource="spring-task.xml"/> -->
+    
+    <task:annotation-driven />
+
+    <context:component-scan base-package="com.task"/> 
+    
+    
+    
+   <!-- 直接启动某个类 -->
+   <!-- <bean class="com.main.SpringStart"></bean> -->
+   <!-- 通过注解扫描的方式启动 -->
+
+	<!-- <context:property-placeholder location="classpath:config.properties" ignore-unresolvable="true"/>
+	
+	
+	<bean id="sslConnectionFactory" class="org.apache.activemq.ActiveMQSslConnectionFactory">
+            activeMQ url
+            <property name="brokerURL" value="${url}" />
+            <property name="keyStore" value="${keyStore}" />
+            <property name="trustStore" value="${trustStore}" />
+            <property name="keyStorePassword" value="${keyStorePassword}" />
+            <property name="trustStorePassword" value="${trustStorePassword}" />
+        </bean>
+	
+	配置activeMq 连接池
+	<bean id="poolConnectFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
+	    <property name="connectionFactory" ref="connectionFactory"/>
+	    <property name="maxConnections" value="100"/>
+	</bean>
+	
+	
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate" >
+		<property name="connectionFactory" ref="poolConnectFactory"></property>
+	</bean> -->
+
+   
+
+</beans>

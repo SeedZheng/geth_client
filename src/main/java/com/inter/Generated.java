@@ -3,6 +3,8 @@ package com.inter;
 import com.service.InvokeService;
 import com.tools.CommUtil;
 
+import rx.Subscription;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.CipherException;
@@ -11,6 +13,7 @@ import org.web3j.crypto.WalletUtils;
 import org.web3j.protocol.admin.Admin;
 import org.web3j.protocol.admin.methods.response.NewAccountIdentifier;
 import org.web3j.protocol.core.DefaultBlockParameter;
+import org.web3j.protocol.core.methods.response.EthAccounts;
 import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
@@ -22,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
@@ -42,17 +46,87 @@ public class Generated  implements  BuildInterface{
     private static final Logger log = LoggerFactory.getLogger(Generated.class);
 
 
-    public Generated() {
+    public Generated() throws Exception{
         getInstance();
         connectGeth();
     }
+    
 
-    public static void main(String[] args) throws IOException {
+    private void loadCred(String payPass) throws Exception{
+       
+            if(config==null)
+                getInstance();
+            if(web3==null)
+                connectGeth();
+            String os=System.getProperty("os.name");
+            String path="";
+            if("linux".equalsIgnoreCase(os))
+                path=config.getProperty("fp_linux");
+            else
+                path=config.getProperty("fp_windows");
+            File file=new File(path);
+            if(CommUtil.isNull(credentials)){
+            	credentials= WalletUtils.loadCredentials(payPass,file);
+            	log.info("credentials loading success");
+            }
+    }
 
+    private  void connectGeth() throws Exception{
+        if(config==null)
+            getInstance();
+        String rpcPort=config.getProperty("port");
+        String addr="http://127.0.0.1:"+rpcPort;
+        if(web3==null){
+            web3= Admin.build(new HttpService(addr));
+            log.info("connect geth success");
+        }
+    }
+
+    public void getInstance() throws Exception{
+        	if(CommUtil.isNull(config) || config.size()==0){
+        		InputStream ins=Generated.class.getClassLoader().getResourceAsStream("config.properties");
+                config.load(ins);
+                log.info("loading properties success");
+        	}
+    }
+
+    public Generated(String payPass) throws Exception{
+        if(gene==null){
+            synchronized (Generated.class){
+                if(gene==null){
+                    gene=new Generated();
+                    getInstance();
+                    connectGeth();
+                    loadCred(payPass);
+                }
+            }
+        }
+    }
+
+    private void checkAll(String payPass) throws Exception{
+        if(config==null)
+            getInstance();
+        if(web3==null)
+            connectGeth();
+        if(credentials==null)
+            loadCred(payPass);
+    }
+
+    private void checkWithoutCre() throws Exception{
+        if(config==null)
+            getInstance();
+        if(web3==null)
+            connectGeth();
     }
 
 
-    public String newAccount(String payPass) {
+    public static void main(String[] args) throws Exception {
+    	new Generated();
+    	Generated.getEvent();
+    }
+
+
+    public String newAccount(String payPass) throws Exception{
     	
         checkAll(payPass);
         String account="";
@@ -65,25 +139,37 @@ public class Generated  implements  BuildInterface{
         return account;
     }
 
-
-    public String listAccounts() {
+    @Override
+    public String listAccounts() throws Exception{
+    	
+    	StringBuilder sb=new StringBuilder();
+    	
+    	EthAccounts accounts=web3.ethAccounts().send();
+        Iterator<String> iterator=accounts.getAccounts().iterator();
+        while(iterator.hasNext()){
+        	sb.append(iterator.next());
+        }
+        return sb.toString();
+    }
+    
+    @Override
+    public String getDevInfo() throws Exception{
         return null;
     }
-
-    public String getDevInfo() {
+    @Override
+    public String getBlockChain(String blockAdd) throws Exception{
         return null;
     }
-
-
-    public String getBlockChain() {
+    @Override
+    public String getDevStatus() throws Exception{
         return null;
     }
-
-    public String getDevStatus() {
-        return null;
+    @Override
+    public String transfer(String _from ,String _to,BigInteger amount)throws Exception{
+    	return null;
     }
-
-    public String getVersion(String testParam){
+    @Override
+    public String getVersion(String testParam)throws Exception{
     	log.info(testParam);
         Web3ClientVersion web3ClientVersion = null;
         try {
@@ -121,82 +207,29 @@ public class Generated  implements  BuildInterface{
         return object;
     }
 
+    //实时获取节点信息
+    private static void getEvent(){
+    	//阻塞事件
+        Subscription subscription=web3.blockObservable(true).subscribe(block->{
+            log.info(block.getBlock().getNumber()+": "+block.getBlock().getMiner());
+        });
 
-
-    private void loadCred(String payPass){
-        try {
-            if(config==null)
-                getInstance();
-            if(web3==null)
-                connectGeth();
-            String os=System.getProperty("os.name");
-            String path="";
-            if("linux".equalsIgnoreCase(os))
-                path=config.getProperty("fp_linux");
-            else
-                path=config.getProperty("fp_windows");
-            File file=new File(path);
-            if(CommUtil.isNull(credentials)){
-            	credentials= WalletUtils.loadCredentials(payPass,file);
-            	log.info("credentials loading success");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (CipherException e) {
-            e.printStackTrace();
-        }
     }
 
-    private  void connectGeth(){
-        if(config==null)
-            getInstance();
-        String rpcPort=config.getProperty("port");
-        String addr="http://127.0.0.1:"+rpcPort;
-        if(web3==null){
-            web3= Admin.build(new HttpService(addr));
-            log.info("connect geth success");
-        }
-    }
-
-    public void getInstance(){
-        try {
-        	if(CommUtil.isNull(config) || config.size()==0){
-        		InputStream ins=Generated.class.getClassLoader().getResourceAsStream("config.properties");
-                config.load(ins);
-                log.info("loading properties success");
-        	}
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Generated(String payPass) {
-        if(gene==null){
-            synchronized (Generated.class){
-                if(gene==null){
-                    gene=new Generated();
-                    getInstance();
-                    connectGeth();
-                    loadCred(payPass);
-                }
-            }
-        }
-    }
-
-    private void checkAll(String payPass){
-        if(config==null)
-            getInstance();
-        if(web3==null)
-            connectGeth();
-        if(credentials==null)
-            loadCred(payPass);
-    }
-
-    private void checkWithoutCre(){
-        if(config==null)
-            getInstance();
-        if(web3==null)
-            connectGeth();
-    }
+	@Override
+	public String getBalance(String address) throws Exception {
+		 EthGetBalance balance=web3.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
+	        BigInteger ba=balance.getBalance();
+	        BigDecimal b=Convert.fromWei(new BigDecimal(ba), Convert.Unit.ETHER);
+		return b.toString();
+	}
+	
+	public  String getBalanceNoParam()throws Exception{
+		
+		EthAccounts accounts=web3.ethAccounts().send();
+		String defaultAccount=accounts.getAccounts().get(0);
+		
+		return defaultAccount+"|"+getBalance(defaultAccount);
+	}
 
 }

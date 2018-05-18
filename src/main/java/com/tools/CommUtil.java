@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.UUID;
 
 public class CommUtil {
 	
@@ -22,7 +23,7 @@ public class CommUtil {
 	
 	
 	public static void main(String[] args) throws Exception {
-		System.out.println(md5("80-FA-5B-3B-77-9E-server"));
+		System.out.println(getMACAddress());
 	}
 	
 	public static String getMACAddress() {
@@ -121,6 +122,11 @@ public class CommUtil {
         os = System.getProperty("os.name");
         return os;
     }
+	
+	public static String getUUID() {
+		String uuid = UUID.randomUUID().toString();
+		return uuid.substring(0, 8) + uuid.substring(9, 13) + uuid.substring(14, 18) + uuid.substring(19, 23) + uuid.substring(24);
+	}
 	
 
 }

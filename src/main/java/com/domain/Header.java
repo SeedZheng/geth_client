@@ -8,7 +8,7 @@ import java.util.Date;
 public class Header {
 
     protected String version;    //版本号，从配置文件中读取
-    protected int type;           //类型 0：命令 1：回复
+    protected int type;           //类型 0：命令 1：回复 2:主动发送的数据 如余额
     protected String trans_id;    //传输ID（包括请求ID和回复ID）
     protected Date curr_time;     //时间戳
 
@@ -43,4 +43,17 @@ public class Header {
     public void setCurr_time(Date curr_time) {
         this.curr_time = curr_time;
     }
+
+	public Header() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Header(String version, int type, String trans_id, Date curr_time) {
+		this.version = version;
+		this.type = type;
+		this.trans_id = trans_id;
+		this.curr_time = curr_time;
+	}
+    
 }

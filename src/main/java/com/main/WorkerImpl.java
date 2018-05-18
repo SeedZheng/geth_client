@@ -3,6 +3,7 @@ package com.main;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.domain.Params;
+import com.domain.ReturnCode;
 import com.domain.Returns;
 import com.tools.CommUtil;
 
@@ -33,8 +34,7 @@ public class WorkerImpl extends Start implements Runnable{
     	Thread.currentThread().setName("Worker-Thread-"+tNmae.getAndIncrement());
     	for(;;){
     		try {
-	   			 String message = taskQueue.take();//拿到命令
-	   			 log.info(message);
+	   			 String message = reqQueue.take();//拿到命令
 	   	    	if(!CommUtil.isEmpty(message))
 	   	    		invoke(message);
 	   		} catch (InterruptedException e) {
@@ -50,7 +50,8 @@ public class WorkerImpl extends Start implements Runnable{
         
         Params param= JSONObject.parseObject(message,Params.class);
         String command=param.getCommand();
-        log.info("receive command :" +command);
+        
+        String ret="";
         
         //拿到参数
         Object[] params=new Object[param.getParams().length];
@@ -76,25 +77,33 @@ public class WorkerImpl extends Start implements Runnable{
         try {
             Class<?> clazz=Class.forName("com.inter.Generated");
             Method method=clazz.getMethod(command,classs);
-            String ret=(String)method.invoke(clazz.newInstance(),params);
-            
-            ret=JSONObject.toJSONString(Returns.initReturns(param, ret));
-            responseQueue.put(ret);
-        } catch (ClassNotFoundException e) {
+            ret=(String)method.invoke(clazz.newInstance(),params);
+            ret=JSONObject.toJSONString(Returns.initReturns(param, ret,null));
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+            ret=JSONObject.toJSONString(Returns.initReturns(param, e.getMessage(),ReturnCode.ERROR));
+        }finally {
+        	try {
+				respQueue.put(ret);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		} 
+    }
+    
+    
+    public static void sendBalance() throws Exception{
+    	//sendBalance:account|balance
+    	
+    	Class<?> clazz=Class.forName("com.inter.Generated");
+    	Method method=clazz.getMethod("getBalanceNoParam");
+    	String result=(String) method.invoke(clazz.newInstance());
+    	result="sendBalance:"+result;
+    	
+    	Returns returns=new Returns("1.0", 2, CommUtil.getUUID(), ReturnCode.SUCCESS, result);
+    	
+    	result=JSONObject.toJSONString(returns);
+    	respQueue.put(result);
     	
     }
 
