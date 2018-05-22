@@ -1,4 +1,4 @@
-package com.inter;
+package com.wenyunet.inter;
 
 import java.util.ArrayList;
 import java.util.TreeSet;

@@ -1,9 +1,9 @@
-package com.domain;
+package com.wenyunet.domain;
 
 import java.util.Date;
 import java.util.Map;
 
-import com.tools.CommUtil;
+import com.wenyunet.tools.CommUtil;
 
 /**
  * Created by seed on 2018/5/3.

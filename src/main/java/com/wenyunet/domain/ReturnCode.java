@@ -1,4 +1,4 @@
-package com.domain;
+package com.wenyunet.domain;
 
 /**
  * Created by seed on 2018/5/3.

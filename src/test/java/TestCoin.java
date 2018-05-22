@@ -1,6 +1,5 @@
 
 
-import com.contract.Coin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.CipherException;
@@ -12,6 +11,8 @@ import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
 import org.web3j.tx.Contract;
 import org.web3j.tx.ManagedTransaction;
+
+import com.wenyunet.contract.Coin;
 
 import java.io.IOException;
 import java.math.BigInteger;

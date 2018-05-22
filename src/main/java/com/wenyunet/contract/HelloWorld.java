@@ -1,4 +1,4 @@
-package com.contract;
+package com.wenyunet.contract;
 
 import java.math.BigInteger;
 import java.util.Arrays;

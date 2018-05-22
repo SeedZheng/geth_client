@@ -1,9 +1,8 @@
-package com.contract;
+package com.wenyunet.contract;
 
 import java.math.BigInteger;
 import java.util.*;
 
-import com.inter.ContractInterface;
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.EventValues;
 import org.web3j.abi.TypeReference;
@@ -21,6 +20,9 @@ import org.web3j.protocol.core.methods.response.Log;
 import org.web3j.protocol.core.methods.response.TransactionReceipt;
 import org.web3j.tx.Contract;
 import org.web3j.tx.TransactionManager;
+
+import com.wenyunet.inter.ContractInterface;
+
 import rx.Observable;
 import rx.functions.Func1;
 

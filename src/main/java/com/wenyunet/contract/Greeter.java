@@ -1,4 +1,4 @@
-package com.contract;
+package com.wenyunet.contract;
 
 import org.web3j.abi.EventEncoder;
 import org.web3j.abi.EventValues;

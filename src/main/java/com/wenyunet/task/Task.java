@@ -1,4 +1,4 @@
-package com.task;
+package com.wenyunet.task;
 
 import java.util.Date;
 
@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.main.Start;
-import com.main.WorkerImpl;
+import com.wenyunet.main.Start;
+import com.wenyunet.main.WorkerImpl;
 
 @Component
 public class Task {

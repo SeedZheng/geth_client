@@ -1,4 +1,4 @@
-package com.inter;
+package com.wenyunet.inter;
 
 import java.io.IOException;
 import java.math.BigInteger;

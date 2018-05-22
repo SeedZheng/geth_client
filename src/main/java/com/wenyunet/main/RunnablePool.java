@@ -1,4 +1,4 @@
-package com.main;
+package com.wenyunet.main;
 
 /**
  * Created by seed on 2018/5/9.

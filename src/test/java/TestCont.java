@@ -1,7 +1,8 @@
 import com.alibaba.fastjson.JSONObject;
-import com.domain.Params;
-import com.inter.Generated;
-import com.tools.SSLUtils;
+import com.wenyunet.domain.Params;
+import com.wenyunet.inter.Generated;
+import com.wenyunet.tools.SSLUtils;
+
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.ActiveMQSslConnectionFactory;
 import org.junit.Test;

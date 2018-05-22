@@ -1,4 +1,4 @@
-package com.main;
+package com.wenyunet.main;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.domain;
+package com.wenyunet.domain;
 
 import java.util.Arrays;
 import java.util.List;

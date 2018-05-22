@@ -1,7 +1,5 @@
 
 
-import com.contract.Greeter;
-import com.contract.HelloWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.crypto.*;
@@ -13,6 +11,10 @@ import org.web3j.tx.Contract;
 import org.web3j.tx.ManagedTransaction;
 import org.web3j.tx.Transfer;
 import org.web3j.utils.Convert;
+
+import com.wenyunet.contract.Greeter;
+import com.wenyunet.contract.HelloWorld;
+
 import rx.Subscription;
 
 import java.io.File;

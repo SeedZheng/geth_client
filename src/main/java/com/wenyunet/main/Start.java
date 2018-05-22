@@ -1,4 +1,4 @@
-package com.main;
+package com.wenyunet.main;
 
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;

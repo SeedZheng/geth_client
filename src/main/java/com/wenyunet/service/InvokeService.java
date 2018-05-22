@@ -1,12 +1,12 @@
-package com.service;
-
-import com.inter.ContractInterface;
+package com.wenyunet.service;
 
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.RemoteCall;
 import org.web3j.tx.Contract;
 import org.web3j.tx.ManagedTransaction;
+
+import com.wenyunet.inter.ContractInterface;
 
 import java.lang.reflect.Method;
 import java.math.BigInteger;

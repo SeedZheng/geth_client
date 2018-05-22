@@ -1,4 +1,4 @@
-package com.tools;
+package com.wenyunet.tools;
 
 import java.io.BufferedReader;
 import java.io.IOException;

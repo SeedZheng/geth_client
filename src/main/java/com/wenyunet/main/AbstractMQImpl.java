@@ -1,4 +1,4 @@
-package com.main;
+package com.wenyunet.main;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,10 +22,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.inter.Generated;
-import com.tools.CommUtil;
-import com.tools.HttpUtils;
-import com.tools.SSLUtils;
+import com.wenyunet.inter.Generated;
+import com.wenyunet.tools.CommUtil;
+import com.wenyunet.tools.HttpUtils;
+import com.wenyunet.tools.SSLUtils;
 
 /**
  * Created by seed on 2018/5/9.

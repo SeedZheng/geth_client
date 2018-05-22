@@ -1,11 +1,11 @@
-package com.main;
+package com.wenyunet.main;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.domain.Params;
-import com.domain.ReturnCode;
-import com.domain.Returns;
-import com.tools.CommUtil;
+import com.wenyunet.domain.Params;
+import com.wenyunet.domain.ReturnCode;
+import com.wenyunet.domain.Returns;
+import com.wenyunet.tools.CommUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,7 +75,7 @@ public class WorkerImpl extends Start implements Runnable{
             classs[i]=c;
         }
         try {
-            Class<?> clazz=Class.forName("com.inter.Generated");
+            Class<?> clazz=Class.forName("com.wenyunet.inter.Generated");
             Method method=clazz.getMethod(command,classs);
             ret=(String)method.invoke(clazz.newInstance(),params);
             ret=JSONObject.toJSONString(Returns.initReturns(param, ret,null));
