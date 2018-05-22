@@ -9,6 +9,8 @@ import java.util.TreeSet;
 public interface ContractInterface {
 
     public String otherFunction(String functionName, Object[] params,ContractInterface obj) throws Exception;
+    
+    public String getContractAddress(ContractInterface obj);
 
 
 }
