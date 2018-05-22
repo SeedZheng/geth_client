@@ -181,4 +181,11 @@ public class Coin extends Contract implements ContractInterface {
 
         public BigInteger amount;
     }
+
+
+	@Override
+	public String getContractAddress(ContractInterface obj) {
+		Coin coin=(Coin)obj;
+        return coin.getContractAddress();
+	}
 }
