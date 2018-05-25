@@ -90,7 +90,10 @@ public class Generated  implements  BuildInterface{
         String addr="http://127.0.0.1:"+rpcPort;
         if(web3==null){
             web3= Admin.build(new HttpService(addr));
-            log.info("connect geth success");
+            if(!CommUtil.isNull(web3))
+            	log.info("connect geth success");
+            else
+            	log.info("connect geth unsuccess");
         }
     }
 
@@ -136,7 +139,9 @@ public class Generated  implements  BuildInterface{
     	return number.getBlockNumber().toString();
     }
     
+   
     public String getBLockChainNews()throws Exception{
+    	 //latestBlock:$|time:$
     	String latestBlock=getBlockNumber();
     	EthBlock block = web3.ethGetBlockByNumber(DefaultBlockParameter.valueOf("latest"), true).send();
     	String parentHash=block.getResult().getParentHash();
@@ -152,9 +157,10 @@ public class Generated  implements  BuildInterface{
     	
     }
 
-
-    public String newAccount(String payPass) throws Exception{
-    	
+    @Override
+    public Map<String,String> newAccount(String payPass) throws Exception{
+    	//walletId:$|chainId:$|account:$
+    	Map<String,String> map=new HashMap<>();
         //checkAll(payPass);
         String account="";
         try {
@@ -163,12 +169,17 @@ public class Generated  implements  BuildInterface{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return account;
+        
+        map.put("account", account);
+        
+        return map;
     }
 
     @Override
-    public String listAccounts() throws Exception{
+    public Map<String,String> listAccounts() throws Exception{
+    	//walletId:$
     	
+    	Map<String,String> map=new HashMap<>();
     	StringBuilder sb=new StringBuilder();
     	
     	EthAccounts accounts=web3.ethAccounts().send();
@@ -176,34 +187,43 @@ public class Generated  implements  BuildInterface{
         while(iterator.hasNext()){
         	sb.append(iterator.next());
         }
-        return sb.toString();
+        
+        map.put("account", sb.toString());
+        
+        return map;
     }
     
     @Override
-    public String getDevInfo() throws Exception{
+    public Map<String,String> getDevInfo() throws Exception{
         return null;
     }
     @Override
-    public String getBlockChain(String blockAdd) throws Exception{
+    public Map<String,String> getBlockChain(String blockAdd) throws Exception{
         return null;
     }
     @Override
-    public String getDevStatus() throws Exception{
+    public Map<String,String> getDevStatus() throws Exception{
         return null;
     }
     @Override
-    public String transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception{
-    	
+    public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception{
+    	//transferId:$|blockHash:$|blockNumber:$
+    	Map<String,String> map=new HashMap<>();
     	checkAll(payPass);
     	
     	TransactionReceipt transactionReceipt=Transfer.sendFunds(web3, credentials, _to, new BigDecimal(amount),unit).send();
     	String blockHash=transactionReceipt.getBlockHash();
     	BigInteger blockNumber = transactionReceipt.getBlockNumber();
-    	return "blockHash:"+blockHash+"|blockNumber:"+blockNumber.longValue();
+    	
+    	map.put("blockHash", blockHash);
+    	map.put("blockNumber", blockNumber.longValue()+"");
+    	
+    	return map;
     }
     @Override
-    public String getVersion(String testParam)throws Exception{
-    	log.info(testParam);
+    public Map<String,String> getVersion()throws Exception{
+    	//log.info(testParam);
+    	Map<String,String> map=new HashMap<>();
         Web3ClientVersion web3ClientVersion = null;
         try {
             web3ClientVersion = web3.web3ClientVersion().send();
@@ -211,13 +231,17 @@ public class Generated  implements  BuildInterface{
             e.printStackTrace();
         }
         String clientVersion = web3ClientVersion.getWeb3ClientVersion();
-        return clientVersion;
+        
+        map.put("clientVersion", clientVersion);
+        
+        return map;
     }
 
     @Override
-    public  String build_factory(String className, String method_name,String payPass, Object[] params) throws Exception {
+    public  Map<String,String> build_factory(String className, String method_name,String payPass, Object[] params) throws Exception {
 
     	log.info("build_factory now");
+    	Map<String,String> map=new HashMap<>();
 
         //checkWithoutCre();
     	checkAll(payPass);
@@ -225,19 +249,25 @@ public class Generated  implements  BuildInterface{
         ContractInterface cInter = InvokeService.deploy_factory(className,web3, credentials);
 
         String object=cInter.otherFunction(method_name,params,cInter);
-        return object;
+        
+        map.put("result", object);
+        
+        return map;
     }
     @Override
-    public  String load_factory(String className, String contractAdd,String method_name, Object[] params) throws Exception {
+    public  Map<String,String> load_factory(String className, String contractAdd,String method_name, Object[] params) throws Exception {
     	
     	log.info("load_factory now");
+    	Map<String,String> map=new HashMap<>();
 
         checkWithoutCre();
 
         ContractInterface cInter = InvokeService.load_factory(className,contractAdd,web3, credentials);
 
         String object=cInter.otherFunction(method_name,params,cInter);
-        return object;
+        map.put("result", object);
+        
+        return map;
     }
 
     //实时获取节点信息
@@ -250,27 +280,38 @@ public class Generated  implements  BuildInterface{
     }
 
 	@Override
-	public String getBalance(String address) throws Exception {
+	public Map<String,String> getBalance(String address) throws Exception {
+		
+		Map<String,String> map=new HashMap<>();
 		 EthGetBalance balance=web3.ethGetBalance(address, DefaultBlockParameter.valueOf("latest")).send();
 	        BigInteger ba=balance.getBalance();
 	        BigDecimal b=Convert.fromWei(new BigDecimal(ba), Convert.Unit.ETHER);
-		return b.toString();
+	        
+	        map.put("balance", b.toString());
+	        
+		return map;
 	}
 	
-	public  String getBalanceNoParam()throws Exception{
+	public  Map<String,String> getBalance()throws Exception{
 		
+		Map<String,String> map=new HashMap<>();
 		EthAccounts accounts=web3.ethAccounts().send();
 		String defaultAccount=accounts.getAccounts().get(0);
 		
-		return defaultAccount+"|"+getBalance(defaultAccount);
+		map.put("account", defaultAccount);
+		map.put("balance", getBalance(defaultAccount).get("balance"));
+		
+		
+		return map;
 	}
 
 
 	@Override
-	public String transfer(String _from, String _to, String payPass, String amount, BigInteger gas_price,
+	public Map<String,String> transfer(String _from, String _to, String payPass, String amount, BigInteger gas_price,
 			BigInteger gas_limit, Unit unit) throws Exception {
 		
 		checkAll(payPass);
+		Map<String,String> map=new HashMap<>();
 		
 		if(CommUtil.isNull(gas_price))
 			gas_limit=GAS_LIMIT;
@@ -293,21 +334,27 @@ public class Generated  implements  BuildInterface{
 		EthSendTransaction transaction=web3.ethSendRawTransaction(hexValue).send();
 		String transactionHash=transaction.getTransactionHash();
 		
-		return "transactionHash:"+transactionHash;
+		map.put("transactionHash", transactionHash);
+		
+		return map;
 	}
 
 
 	@Override
-	public String build_factory(String className, String payPass) throws Exception {
+	public Map<String,String> build_factory(String className, String payPass) throws Exception {
 		log.info("build_factory now");
 
         //checkWithoutCre();
     	checkAll(payPass);
+    	Map<String,String> map=new HashMap<>();
 
         ContractInterface cInter = InvokeService.deploy_factory(className,web3, credentials);
 
         String object=cInter.getContractAddress(cInter);
-        return object;
+        
+        map.put("result", object);
+        
+        return map;
 	}
 
 }

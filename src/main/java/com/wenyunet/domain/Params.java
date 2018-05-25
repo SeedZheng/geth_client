@@ -11,6 +11,7 @@ public class Params extends Header {
 
 
     private String command;  //命令
+    private String data;    //携带参数(需要客户端返回)
     private Object[] params;  //参数
 
     public String getCommand() {
@@ -28,11 +29,14 @@ public class Params extends Header {
     public void setParams(Object[] params) {
         this.params = params;
     }
+    
 
-	@Override
-	public String toString() {
-		return "Params [command=" + command + ", params=" + Arrays.toString(params) + ", version=" + version + ", type="
-				+ type + ", trans_id=" + trans_id + ", curr_time=" + curr_time + "]";
+	public String getData() {
+		return data;
+	}
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
     

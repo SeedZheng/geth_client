@@ -3,6 +3,8 @@ package com.wenyunet.domain;
 import java.util.Date;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.wenyunet.tools.CommUtil;
 
 /**
@@ -35,21 +37,31 @@ public class Returns extends  Header{
 	public Returns() {}
 	
 
-	public Returns(String version, int type, String trans_id,  ReturnCode retCode, String content) {
+	public Returns(String version, int type, TransId trans_id,  ReturnCode retCode, Object content) {
 		super(version, type, trans_id, new Date());
 		this.retCode = retCode;
-		this.content = content;
+		this.content = JSONObject.toJSONString(content);
 	}
 	
 
-	public static Returns initReturns(Params param,String ret,ReturnCode code){
+	public static Returns initReturns(Params param,Object ret,ReturnCode code){
     	Returns returns=new Returns();
     	returns.setCurr_time(new Date());
     	returns.setTrans_id(param.getTrans_id());
-    	returns.setType(1);
+    	returns.setType(param.getType());
     	returns.setVersion(param.getVersion());
-    	returns.setContent(ret);
     	returns.setRetCode(null==code?ReturnCode.SUCCESS:code);
+    	
+    	if(ret instanceof Map){
+    		Map<String,String> map=(Map)ret;
+    		Map<String,String> data=JSONObject.parseObject(param.getData(),Map.class);
+    		map.putAll(data);
+        	String json=JSON.toJSONString(map);
+        	returns.setContent(json);
+    	}
+    	if(ret instanceof String){
+    		returns.setContent((String)ret);
+    	}
     	
     	return returns;
     }
@@ -66,14 +78,14 @@ public class Returns extends  Header{
 		param.setCommand("command");
 		param.setCurr_time(new Date());
 		param.setParams(new Object[]{"123"});
-		param.setTrans_id("123456");
+		//param.setTrans_id("123456");
 		param.setType(1);
 		param.setVersion("1.0");
 		
 		System.out.println(param.toString());
 		
-		Returns returns=initReturns(param, "rets",null);
-		System.out.println(returns.toString());
+		//Returns returns=initReturns(param, "rets",null);
+		//System.out.println(returns.toString());
 		
 	}
 }

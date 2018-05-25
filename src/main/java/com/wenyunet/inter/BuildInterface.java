@@ -2,24 +2,28 @@ package com.wenyunet.inter;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Map;
 
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.utils.Convert;
 
 public interface BuildInterface {
 	
+	
+	public Map<String,String> newAccount(String payPass) throws Exception;
+	
 	/**
 	 * 列举出当前所有账户
 	 * @return
 	 * @throws Exception
 	 */
-     public String listAccounts() throws Exception;
+     public Map<String,String> listAccounts() throws Exception;
     
-     public String getDevInfo() throws Exception;
+     public Map<String,String> getDevInfo() throws Exception;
 
-     public String getBlockChain(String blockAdd) throws Exception;
+     public Map<String,String> getBlockChain(String blockAdd) throws Exception;
      
-     public String getDevStatus() throws Exception;
+     public Map<String,String> getDevStatus() throws Exception;
     
      /**
       * 自己转账给其他人
@@ -30,7 +34,7 @@ public interface BuildInterface {
       * @return
       * @throws Exception
       */
-     public String transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception;
+     public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception;
      
      /**
       * 账户之间转账
@@ -44,7 +48,7 @@ public interface BuildInterface {
       * @return
       * @throws Exception
       */
-     public String transfer(String _from,String _to,String payPass,String amount,BigInteger gas_price,BigInteger gas_limit,Convert.Unit unit)throws Exception;
+     public Map<String,String> transfer(String _from,String _to,String payPass,String amount,BigInteger gas_price,BigInteger gas_limit,Convert.Unit unit)throws Exception;
 
      /**
       * 获取GETH版本
@@ -52,14 +56,14 @@ public interface BuildInterface {
       * @return
       * @throws Exception
       */
-     public String getVersion(String testParam)throws Exception;
+     public Map<String,String> getVersion()throws Exception;
      
      /**
       * 获取我的账户余额
       * @return
       * @throws Exception
       */
-     public String getBalance(String address)throws Exception;
+     public Map<String,String> getBalance(String address)throws Exception;
      
 	/**
 	 * 部署合约
@@ -70,7 +74,7 @@ public interface BuildInterface {
 	 * @return
 	 * @throws Exception
 	 */
-	 public  String build_factory(String className, String method_name,String payPass, Object[] params) throws Exception;
+	 public  Map<String,String> build_factory(String className, String method_name,String payPass, Object[] params) throws Exception;
 	 
 	 /**
 	  * 合约部署
@@ -79,7 +83,7 @@ public interface BuildInterface {
 	  * @return				合约地址
 	  * @throws Exception
 	  */
-	 public  String build_factory(String className, String payPass) throws Exception;
+	 public  Map<String,String> build_factory(String className, String payPass) throws Exception;
 	 
 	 /**
 	  * 调用合约
@@ -90,6 +94,13 @@ public interface BuildInterface {
 	  * @return				方法调用结果
 	  * @throws Exception
 	  */
-	 public  String load_factory(String className, String contractAdd,String method_name, Object[] params) throws Exception;
+	 public  Map<String,String> load_factory(String className, String contractAdd,String method_name, Object[] params) throws Exception;
+	 
+	 /**
+	     * 获取我的账户余额
+	     * @return
+	     * @throws Exception
+	     */
+	 public  Map<String,String> getBalance()throws Exception;
 
 }

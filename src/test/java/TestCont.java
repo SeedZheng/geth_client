@@ -37,11 +37,11 @@ public class TestCont {
         //ret=generated.build_factory(className,"minter",null);
         //ret=generated.build_factory(className,"contAdd",null);
         String contractAdd="0x8411cbbf2b62141a33fbdb08c273199fb8a5189b";
-        ret=generated.load_factory(className,contractAdd,"balance",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19"});
+        //ret=generated.load_factory(className,contractAdd,"balance",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19"});
         System.out.println("当前的代币余额是："+ret);
-        ret=generated.load_factory(className,contractAdd,"mint",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19",new BigInteger("1000")});
+        //ret=generated.load_factory(className,contractAdd,"mint",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19",new BigInteger("1000")});
         System.out.println("增1000代币的结果是："+ret);
-        ret=generated.load_factory(className,contractAdd,"balance",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19"});
+        //ret=generated.load_factory(className,contractAdd,"balance",new Object[]{"0x6714eb1c2911bc5f6bf36bdee01979592617aa19"});
         System.out.println("当前的代币余额是："+ret);
 
     }
@@ -155,7 +155,7 @@ public class TestCont {
         p.setCommand(command);
         p.setParams(params);
         p.setCurr_time(new Date());
-        p.setTrans_id("112344");
+        //p.setTrans_id("112344");
         p.setType(0);
         p.setVersion("1.0");
         String content= JSONObject.toJSONString(p);
