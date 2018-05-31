@@ -34,7 +34,7 @@ public interface BuildInterface {
       * @return
       * @throws Exception
       */
-     public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception;
+     public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass,String address)throws Exception;
      
      /**
       * 账户之间转账
@@ -48,7 +48,8 @@ public interface BuildInterface {
       * @return
       * @throws Exception
       */
-     public Map<String,String> transfer(String _from,String _to,String payPass,String amount,BigInteger gas_price,BigInteger gas_limit,Convert.Unit unit)throws Exception;
+     public Map<String,String> transfer(String _from,String _to,String payPass,String amount,BigInteger gas_price,
+    		 BigInteger gas_limit,Convert.Unit unit,String address)throws Exception;
 
      /**
       * 获取GETH版本

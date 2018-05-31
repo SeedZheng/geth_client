@@ -11,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
+import org.web3j.utils.Convert.Unit;
 
 /**
  * Created by seed on 2018/5/9.
@@ -23,8 +24,9 @@ public  class Start{
           处理逻辑：数量若干
     2.初始任务队列
      */
-    static BlockingQueue<String> reqQueue=new LinkedBlockingQueue<>();
-    static BlockingQueue<String> respQueue=new LinkedBlockingQueue<>();
+	protected  static BlockingQueue<String> reqQueue=new LinkedBlockingQueue<>();
+	protected  static BlockingQueue<String> respQueue=new LinkedBlockingQueue<>();
+	protected   static  Unit[] units;
     //static final long MAX_WAIT_TIME=Integer.MAX_VALUE;
 
     public static void main(String[] args) {

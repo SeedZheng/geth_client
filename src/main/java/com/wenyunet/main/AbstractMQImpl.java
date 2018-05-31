@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -21,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.web3j.utils.Convert;
 
 import com.wenyunet.inter.Generated;
 import com.wenyunet.tools.CommUtil;
@@ -38,7 +41,7 @@ public class AbstractMQImpl extends  Start  {
 	static Executor response= Executors.newSingleThreadExecutor();
 	private static int process_num=Runtime.getRuntime().availableProcessors();
 	//worker线程
-	Executor worker=Executors.newFixedThreadPool(process_num);
+	ScheduledExecutorService worker=Executors.newScheduledThreadPool(process_num);
 	
 	// 创建SSL连接器工厂类
 	private ActiveMQSslConnectionFactory sslConnectionFactory ;
@@ -60,6 +63,7 @@ public class AbstractMQImpl extends  Start  {
     public AbstractMQImpl(){
     	 try {
 	    	new Generated();
+	    	units=Convert.Unit.values();
 	        config= Generated.config;
 	        keyStore=config.getProperty("keyStore");
 	        trustStore=config.getProperty("trustStore");
@@ -69,7 +73,7 @@ public class AbstractMQImpl extends  Start  {
 	        
 	        //启动多个worker线程，阻塞在读取
 	        for(int i=0;i<process_num;i++){
-	        	worker.execute(new WorkerImpl());
+	        	worker.schedule(new WorkerImpl(),30,TimeUnit.SECONDS);
 	        }
        
             sslConnectionFactory= new ActiveMQSslConnectionFactory();

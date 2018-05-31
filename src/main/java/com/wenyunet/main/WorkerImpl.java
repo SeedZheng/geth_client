@@ -69,6 +69,12 @@ public class WorkerImpl extends Start implements Runnable{
         		}
         		obj=o;
         	}
+        	for(int n=0;n<units.length;n++){
+        		if(units[n].name().equals(obj)){
+        			obj=units[n];
+        			break;
+        		}
+        	}
         	params[i]=obj;
         }
         Class<?>[] classs=new Class[params.length];

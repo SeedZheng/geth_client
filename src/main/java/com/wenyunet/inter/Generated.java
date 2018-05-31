@@ -206,7 +206,7 @@ public class Generated  implements  BuildInterface{
         return null;
     }
     @Override
-    public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass)throws Exception{
+    public Map<String,String> transfer(String _to,String amount,Convert.Unit unit,String payPass,String address)throws Exception{
     	//transferId:$|blockHash:$|blockNumber:$
     	Map<String,String> map=new HashMap<>();
     	checkAll(payPass);
@@ -308,7 +308,7 @@ public class Generated  implements  BuildInterface{
 
 	@Override
 	public Map<String,String> transfer(String _from, String _to, String payPass, String amount, BigInteger gas_price,
-			BigInteger gas_limit, Unit unit) throws Exception {
+			BigInteger gas_limit, Unit unit,String address) throws Exception {
 		
 		checkAll(payPass);
 		Map<String,String> map=new HashMap<>();
