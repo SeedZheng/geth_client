@@ -30,11 +30,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class WorkerImpl extends Start implements Runnable{
 
     private static final Logger log = LoggerFactory.getLogger(WorkerImpl.class);
-    private static AtomicInteger tNmae=new AtomicInteger(0);
+    private static AtomicInteger tName=new AtomicInteger(0);
 
     @Override
     public void run() {
-    	Thread.currentThread().setName("Worker-Thread-"+tNmae.getAndIncrement());
+    	Thread.currentThread().setName("Worker-Thread-"+tName.getAndIncrement());
     	for(;;){
     		try {
 	   			 String message = reqQueue.take();//拿到命令

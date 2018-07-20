@@ -73,7 +73,7 @@ public class AbstractMQImpl extends  Start  {
 	        
 	        //启动多个worker线程，阻塞在读取
 	        for(int i=0;i<process_num;i++){
-	        	worker.schedule(new WorkerImpl(),30,TimeUnit.SECONDS);
+	        	worker.schedule(new WorkerImpl(),10,TimeUnit.SECONDS);
 	        }
        
             sslConnectionFactory= new ActiveMQSslConnectionFactory();
@@ -111,7 +111,7 @@ public class AbstractMQImpl extends  Start  {
     	Map<String,Object> params=new HashMap<>();
     	params.put("mac", mac);
     	params.put("version", "1.0");
-    	HttpUtils.sendPost("http://localhost:8080/api/geth/init", params);
+    	HttpUtils.sendPost("http://localhost:1111/api/geth/init?mac="+mac, params);
     }
     
     /**

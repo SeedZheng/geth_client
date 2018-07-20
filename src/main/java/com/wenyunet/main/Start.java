@@ -33,7 +33,7 @@ public  class Start{
     	//先尝试连接服务器
         //boss.execute(new AbstractMQImpl());
     	new AbstractMQImpl().start();
-    	new ClassPathXmlApplicationContext("spring.xml");
+    	//new ClassPathXmlApplicationContext("spring.xml");
     }
 
 
